@@ -4,7 +4,9 @@ const PORTAL_MENU = {
 };
 
 const PORTAL_NAV_ITEMS = ["产品", "解决方案", "标杆案例", "资源中心", "服务支持", "生态伙伴与开发者", "关于金蝶"];
-const KINGDEE_LOGO_SRC = "/kingdee-logo.png";
+const BASE_URL = import.meta.env.BASE_URL || "/";
+const KINGDEE_LOGO_SRC = `${BASE_URL}kingdee-logo.png`;
+const PORTAL_HERO_ART_SRC = `${BASE_URL}portal-hero-art.png`;
 
 const DEFAULT_CARDS = [
   {
@@ -319,7 +321,7 @@ class AiSceneApp extends HTMLElement {
       </header>
       <main class="portal-main">
         <section class="portal-hero">
-          <img class="portal-hero-bg" src="/portal-hero-art.png" alt="AI 智能体视觉图" />
+          <img class="portal-hero-bg" src="${PORTAL_HERO_ART_SRC}" alt="AI 智能体视觉图" />
           <div class="portal-hero-inner">
             <div class="portal-hero-left">
               <h1>AI 时代<br>企业管理用金蝶</h1>
