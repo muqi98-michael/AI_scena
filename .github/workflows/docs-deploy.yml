@@ -1,11 +1,10 @@
-name: Deploy Project Docs
+name: Deploy Web App To Pages
 
 on:
   push:
     branches: ["main"]
     paths:
-      - "README.md"
-      - "app/*.md"
+      - "app/**"
       - ".github/workflows/docs-deploy.yml"
   workflow_dispatch:
 
@@ -28,34 +27,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare docs source
-        run: |
-          mkdir -p site
-          cp README.md site/index.md
-          cp app/README.md site/app-readme.md
-          cp app/EMBED_INTEGRATION.md site/embed-integration.md
-          cp app/FRONTEND_QUICK_START.md site/frontend-quick-start.md
-          cp app/OPS_DEPLOYMENT.md site/ops-deployment.md
-          cat > site/_config.yml <<'EOF'
-          title: AI Scena Docs
-          description: AI 场景项目文档站点
-          markdown: kramdown
-          theme: minima
-          EOF
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: app
+
+      - name: Build web app
+        run: npm run build
+        working-directory: app
+        env:
+          VITE_BASE_PATH: /AI_scena/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: site
-          destination: _site
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: app/dist
 
       - name: Deploy to GitHub Pages
         id: deployment
